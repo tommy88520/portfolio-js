@@ -15,12 +15,12 @@ export class PortfolioService {
     return await this.portfolioRepo.getAllMenu();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} portfolio`;
-  }
+  // async updateMenu(id: number) {
+  //   return `This action returns a #${id} portfolio`;
+  // }
 
-  update(id: number, updatePortfolioDto: UpdatePortfolioDto) {
-    return `This action updates a #${id} portfolio`;
+  async updateMenu(id, updatePortfolioDto: CreatePortfolioDto) {
+    return await this.portfolioRepo.updateMenu(id, updatePortfolioDto);
   }
 
   remove(id: number) {

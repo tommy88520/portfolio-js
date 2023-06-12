@@ -8,11 +8,13 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  BadRequestException,
 } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { CreatePortfolioDto } from './dto/menu.dto';
 import { UpdatePortfolioDto } from './dto/update-portfolio.dto';
-import { ApiBody, ApiOperation } from '@nestjs/swagger';
+import { Types } from 'mongoose';
+import { ApiBody, ApiOperation, ApiParam } from '@nestjs/swagger';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -22,7 +24,7 @@ export class PortfolioController {
   @UsePipes(new ValidationPipe())
   @ApiOperation({ description: 'createMenu' })
   @ApiBody({ type: CreatePortfolioDto })
-  create(@Body() createPortfolioDto: CreatePortfolioDto) {
+  async create(@Body() createPortfolioDto: CreatePortfolioDto) {
     return this.portfolioService.create(createPortfolioDto);
   }
 
@@ -31,17 +33,24 @@ export class PortfolioController {
     return await this.portfolioService.getAllMenu();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.portfolioService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.portfolioService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(
+  @Patch('update-menu/:id')
+  @UsePipes(new ValidationPipe())
+  @ApiOperation({ description: 'updateMenu' })
+  @ApiBody({ type: CreatePortfolioDto })
+  async updateMenu(
     @Param('id') id: string,
-    @Body() updatePortfolioDto: UpdatePortfolioDto,
+    @Body() updatePortfolioDto: CreatePortfolioDto,
   ) {
-    return this.portfolioService.update(+id, updatePortfolioDto);
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Invalid ObjectId');
+    }
+
+    return await this.portfolioService.updateMenu(id, updatePortfolioDto);
   }
 
   @Delete(':id')
