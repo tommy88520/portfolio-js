@@ -101,7 +101,7 @@ release_build:
     - if: $CI_COMMIT_BRANCH == 'master'
   script:
     - latest_tag=$(git describe --tags --abbrev=0)
-    - echo "最新的标签：$latest_tag"
+    - echo "最新的标签222：$latest_tag"
   variables:
     IMAGE_ENDPOINT: ${RELEASE_IMAGE_ENDPOINT}
     DOCKER_TAG: release
