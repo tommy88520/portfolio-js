@@ -1,15 +1,15 @@
-
 stages:
   - build_container
 
-.release_build:
-  extends: .build
+.build:
+  stage: build_container
   script:
     - echo "here"
 
 release_build:
-  extends: .release_build
+  extends: .build
   script:
+    - echo "overridden"
     - |
       if git describe --tags --exact-match HEAD >/dev/null 2>&1; then
         echo "当前提交有标签"
@@ -18,9 +18,3 @@ release_build:
       fi
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
-  variables:
-    IMAGE_ENDPOINT: ${RELEASE_IMAGE_ENDPOINT}
-    DOCKER_TAG: release
-    INSTANCES_GROUP_NAME: luo-dian-backend-release-group
-    DOCKER_FILE_LOCAL: ./Dockerfile
-
