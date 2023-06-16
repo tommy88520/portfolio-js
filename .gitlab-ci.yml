@@ -12,32 +12,10 @@ stages:
   # - deploy
   # - clean
 
-.base_gcloud_job:
-  image: google/cloud-sdk:latest
-  before_script:
-    - gcloud --version
-    - gcloud auth activate-service-account --key-file ./config/key/luo-dian-e51c494a9850.json
-    - gcloud config set project ${PROJECT_NAME}
-    - gcloud config set compute/region asia-east1
-    - gcloud config set disable_prompts true
-
 .build:
-  extends: .base_gcloud_job
   stage: build_container
   script:
-    - echo ${CI_COMMIT_BRANCH}
-    - echo ${IMAGE_ENDPOINT}
-    - echo ${DOCKER_TAG}
-    - echo ${CI_COMMIT_SHA}
-    - >
-      gcloud beta builds submit
-      --config=${BUILD_CONFIG_FILE}
-      --ignore-file=.gcloudignore
-      --substitutions _DOCKER_REGISTRY_URL=${DOCKER_REGISTRY_URL},_IMAGE_ENDPOINT=${IMAGE_ENDPOINT},_DOCKER_TAG=${CI_COMMIT_SHA},_DOCKER_FILE_LOCAL=${DOCKER_FILE_LOCAL}
-    - >
-      gcloud container images add-tag
-      ${DOCKER_REGISTRY_URL}/${IMAGE_ENDPOINT}:${CI_COMMIT_SHA}
-      ${DOCKER_REGISTRY_URL}/${IMAGE_ENDPOINT}:${DOCKER_TAG}
+    - echo "here"
 
 .create:
   extends: .base_gcloud_job
@@ -95,8 +73,8 @@ stages:
       done
 
 release_build:
-  # extends: .build
-  stage: build_container
+  extends: .build
+  # stage: build_container
   script:
     - |
       if git describe --tags --exact-match HEAD >/dev/null 2>&1; then
@@ -105,6 +83,7 @@ release_build:
         echo "当前提交没有标签"
       fi
   rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
   variables:
     IMAGE_ENDPOINT: ${RELEASE_IMAGE_ENDPOINT}
     DOCKER_TAG: release
