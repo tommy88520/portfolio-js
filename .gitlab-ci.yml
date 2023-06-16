@@ -98,7 +98,9 @@ release_build:
   # extends: .build
   stage: build_container
   rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      exists:
+        - 'refs/tags/*'
   script:
     - latest_tag=$(git describe --tags --abbrev=0)
     - echo "最新的标签222：$latest_tag"
