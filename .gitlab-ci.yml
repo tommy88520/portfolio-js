@@ -97,13 +97,14 @@ stages:
 release_build:
   # extends: .build
   stage: build_container
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "master"'
-      exists:
-        - 'refs/tags/*'
   script:
-    - latest_tag=$(git describe --tags --abbrev=0)
-    - echo "最新的标签222：$latest_tag"
+    - |
+      if git describe --tags --exact-match HEAD >/dev/null 2>&1; then
+        echo "当前提交有标签"
+      else
+        echo "当前提交没有标签"
+      fi
+  rules:
   variables:
     IMAGE_ENDPOINT: ${RELEASE_IMAGE_ENDPOINT}
     DOCKER_TAG: release
