@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.9](https://github.com/tommy88520/portfolio-js/compare/v0.0.8...v0.0.9) (2023-06-16)
+
+
+### Features
+
+* go test version ([60849ec](https://github.com/tommy88520/portfolio-js/commit/60849ec19b09074c3d5fa31428ad26701ce2d9e0))
+
 ### [0.0.8](https://github.com/tommy88520/portfolio-js/compare/v0.0.7...v0.0.8) (2023-06-16)
 
 ### [0.0.7](https://github.com/tommy88520/portfolio-js/compare/v0.0.6...v0.0.7) (2023-06-16)
