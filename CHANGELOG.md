@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/tommy88520/portfolio-js/compare/v1.1.0...v1.2.0) (2023-06-16)
+
+
+### Features
+
+* add a next ([b38eeb3](https://github.com/tommy88520/portfolio-js/commit/b38eeb34a28ca9c85e7e5a319c13e2c84be4de87))
+
 ## [1.1.0](https://github.com/tommy88520/portfolio-js/compare/v1.0.13...v1.1.0) (2023-06-16)
 
 
