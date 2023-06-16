@@ -9,6 +9,6 @@ stages:
 release_build:
   extends: .build
   script:
-    - echo $CI_PIPELINE_SOURCE
+    - echo $CI_COMMIT_TAG 
   rules:
-    - if: $CI_COMMIT_BRANCH == "master" && $CI_PIPELINE_SOURCE != "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "master"
