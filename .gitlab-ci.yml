@@ -9,12 +9,6 @@ stages:
 release_build:
   extends: .build
   script:
-    - echo "overridden"
-    - |
-      if git describe --tags --exact-match HEAD >/dev/null 2>&1; then
-        echo "当前提交有标签"
-      else
-        echo "当前提交没有标签"
-      fi
+    - echo $CI_PIPELINE_SOURCE
   rules:
     - if: '$CI_COMMIT_BRANCH == "master"'
