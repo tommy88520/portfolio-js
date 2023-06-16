@@ -1,26 +1,14 @@
-variables:
-  PROJECT_NAME: luo-dian
-  DOCKER_REGISTRY_URL: asia-east1-docker.pkg.dev
-  BUILD_CONFIG_FILE: vm-cloudbuild.yaml
-  NIC0_SUBNET: luo-dian
-  SERVICE_ACCOUNT: 274669080395-compute@developer.gserviceaccount.com
-  RELEASE_IMAGE_ENDPOINT: luo-dian/luo-dian/release
 
 stages:
   - build_container
-  # - create_template
-  # - deploy
-  # - clean
 
-.build:
-  stage: build_container
+.release_build:
+  extends: .build
   script:
     - echo "here"
 
-
 release_build:
-  extends: .build
-  # stage: build_container
+  extends: .release_build
   script:
     - |
       if git describe --tags --exact-match HEAD >/dev/null 2>&1; then
@@ -29,7 +17,7 @@ release_build:
         echo "当前提交没有标签"
       fi
   rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
+    - if: '$CI_COMMIT_BRANCH == "master"'
   variables:
     IMAGE_ENDPOINT: ${RELEASE_IMAGE_ENDPOINT}
     DOCKER_TAG: release
