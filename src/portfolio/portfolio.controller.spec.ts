@@ -31,7 +31,7 @@ describe('PortfolioController', () => {
     controller = module.get<PortfolioController>(PortfolioController);
   });
 
-  it('should be definedd', () => {
+  it('should be definedds', () => {
     expect(controller).toBeDefined();
   });
 
