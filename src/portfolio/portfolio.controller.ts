@@ -33,11 +33,6 @@ export class PortfolioController {
     return await this.portfolioService.getAllMenu();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.portfolioService.findOne(+id);
-  // }
-
   @Patch('update-menu/:id')
   @UsePipes(new ValidationPipe())
   @ApiOperation({ description: 'updateMenu' })
@@ -54,7 +49,10 @@ export class PortfolioController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.portfolioService.remove(+id);
+  async removeMenu(@Param('id') id: string) {
+    if (!Types.ObjectId.isValid(id)) {
+      throw new BadRequestException('Invalid ObjectId');
+    }
+    return this.portfolioService.remove(id);
   }
 }

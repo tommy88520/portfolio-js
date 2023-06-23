@@ -11,7 +11,7 @@ export class PortfolioRepository {
     private menuModel: Model<MenuDocument>,
   ) {}
 
-  async createMenu(query): Promise<Menu> {
+  async createMenu(query: Menu): Promise<Menu> {
     const result = new this.menuModel(query);
     return await result.save();
   }
@@ -20,7 +20,7 @@ export class PortfolioRepository {
     return await this.menuModel.find();
   }
 
-  async updateMenu(id, query): Promise<Menu> {
+  async updateMenu(id: string, query: Menu): Promise<Menu> {
     const objId = new Types.ObjectId(id);
     const result = await this.menuModel.findOneAndUpdate(
       { _id: objId },
@@ -29,8 +29,12 @@ export class PortfolioRepository {
         new: true,
       },
     );
-
-    console.log(result);
     return result;
+  }
+
+  async removeMenu(id: string): Promise<boolean> {
+    const objId = new Types.ObjectId(id);
+    const result = await this.menuModel.deleteOne({ _id: objId });
+    return result.acknowledged;
   }
 }

@@ -11,7 +11,7 @@ export class PortfolioService {
     return result;
   }
 
-  async getAllMenu() {
+  async getAllMenu(): Promise<CreatePortfolioDto[]> {
     return await this.portfolioRepo.getAllMenu();
   }
 
@@ -19,11 +19,11 @@ export class PortfolioService {
   //   return `This action returns a #${id} portfoliodddd`;
   // }
 
-  async updateMenu(id, updatePortfolioDto: CreatePortfolioDto) {
+  async updateMenu(id: string, updatePortfolioDto: CreatePortfolioDto) {
     return await this.portfolioRepo.updateMenu(id, updatePortfolioDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} portfolio`;
+  async remove(id: string) {
+    return await this.portfolioRepo.removeMenu(id);
   }
 }
