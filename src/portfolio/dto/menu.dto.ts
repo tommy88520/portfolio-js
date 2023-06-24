@@ -1,7 +1,7 @@
 import { IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreatePortfolioDto {
+export class CreateMenuDto {
   @IsString()
   @ApiProperty({ description: '連結' })
   navigation: string;
