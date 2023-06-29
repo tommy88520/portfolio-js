@@ -1,14 +1,108 @@
+variables:
+  PROJECT_NAME: portfolio
+  DOCKER_REGISTRY_URL: asia-east1-docker.pkg.dev
+  NIC0_SUBNET: portfolio
+  SERVICE_ACCOUNT: 248628901676-compute@developer.gserviceaccount.com
+  PROD_IMAGE_ENDPOINT: $PROJECT_ID/portfolio/backend-prod
+  BUILD_CONFIG_FILE: vm-cloudbuild.yaml
+  PREVIOUS_COMMIT: ""
+
 stages:
-  - build_container
+  - create_template
+  - deploy
+  - clean
 
-.build:
-  stage: build_container
-  script:
-    - echo "here2112"
+.base_gcloud_job:
+  image: google/cloud-sdk:latest
+  before_script:
+    - PREVIOUS_COMMIT=$(git log -1 --pretty=%H)
+    - gcloud --version
+    - gcloud auth activate-service-account --key-file ./config/key/portfolio-js-123-08cc5e335d93.json
+    - gcloud config set project $PROJECT_ID
+    - gcloud config set compute/region asia-east1
+    - gcloud config set disable_prompts true
 
-release_build:
-  extends: .build
+.create:
+  extends: .base_gcloud_job
+  stage: create_template
   script:
-    - echo $CI_COMMIT_TAG 
+    - echo ${TEMPLATE_NAME}
+    - echo ${PROJECT_NAME}
+    - echo $SERVICE_ACCOUNT
+    - >
+      gcloud compute instance-templates create-with-container ${TEMPLATE_NAME}
+      --machine-type=${MACHINE_TYPE}
+      --boot-disk-size=10
+      --boot-disk-type=pd-balanced
+      --boot-disk-device-name=${TEMPLATE_NAME}
+      --network-interface=subnet=${NIC0_SUBNET}
+      --service-account=${SERVICE_ACCOUNT}
+      --tags=health-check,iap-tunnel-ssh,${PROJECT_NAME},http-server,https-server
+      --container-image=${DOCKER_REGISTRY_URL}/${IMAGE_ENDPOINT}:${PREVIOUS_COMMIT}
+      --shielded-integrity-monitoring
+      --shielded-vtpm
+
+.deploy:
+  extends: .base_gcloud_job
+  stage: deploy
+  script:
+    - gcloud compute instance-groups managed rolling-action start-update ${INSTANCES_GROUP_NAME} --version=template=${TEMPLATE_NAME} --max-surge=3 --max-unavailable=0 --zone=asia-east1-c
+    - >
+      gcloud container images add-tag
+      ${DOCKER_REGISTRY_URL}/${IMAGE_ENDPOINT}:${PREVIOUS_COMMIT}
+      ${DOCKER_REGISTRY_URL}/${IMAGE_ENDPOINT}:running
+
+.clean:
+  extends: .base_gcloud_job
+  stage: clean
+  script:
+    - |
+      i=0
+      for digest in $(gcloud artifacts docker images list --include-tags ${DOCKER_REGISTRY_URL}/${IMAGE_ENDPOINT} --filter="-tags:(${DOCKER_TAG}, running, ${PREVIOUS_COMMIT})" --sort-by='~CREATE_TIME' --format='get(DIGEST)' --limit=1000); do
+        if [ $i -lt 10 ]; then
+          echo "keep ${digest}"
+        else
+          echo "delete ${digest}"
+          gcloud artifacts docker images delete  ${DOCKER_REGISTRY_URL}/${IMAGE_ENDPOINT}@${digest} --delete-tags
+        fi
+        i=$(($i + 1))
+      done
+    - |
+      i=0
+      for template in $(gcloud compute instance-templates list --filter="name=${BASE_TEMPLATE}" --sort-by='~creationTimestamp' --format='value(NAME)' --limit=1000); do
+      if [ $i -lt 10 ]; then
+          echo "keep ${template}"
+      else
+          echo "delete ${template}"
+          gcloud compute instance-templates delete ${template}
+      fi
+      i=$(($i + 1))
+      done
+
+prod_create:
+  extends: .create
   rules:
-    - if: $CI_COMMIT_BRANCH == "master"
+    - if: $CI_COMMIT_BRANCH == 'master' && $CI_PROJECT_PATH == 'tommy88520/tommy-portfolio'
+  variables:
+    IMAGE_ENDPOINT: ${PROD_IMAGE_ENDPOINT}
+    TEMPLATE_NAME: portfolio-backend-prod-template-${CI_COMMIT_SHORT_SHA}
+    MACHINE_TYPE: e2-micro
+    
+prod_deploy:
+  extends: .deploy
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master' && $CI_PROJECT_PATH == 'tommy88520/tommy-portfolio'
+  variables:
+    IMAGE_ENDPOINT: ${PROD_IMAGE_ENDPOINT}
+    DOCKER_TAG: prod
+    INSTANCES_GROUP_NAME: portfolio-backend-prod-group
+    TEMPLATE_NAME: portfolio-backend-prod-template-${CI_COMMIT_SHORT_SHA}
+
+prod_clean:
+  extends: .clean
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master' && $CI_PROJECT_PATH == 'tommy88520/tommy-portfolio'
+  variables:
+    IMAGE_ENDPOINT: ${PROD_IMAGE_ENDPOINT}
+    BASE_TEMPLATE: portfolio-backend-prod-template
+    DOCKER_TAG: prod
