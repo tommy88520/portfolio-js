@@ -5,11 +5,12 @@ stages:
   stage: build_container
   script:
     - echo "here2112"
-    - echo $PROD_ENV
+    
 
 release_build:
   extends: .build
   script:
     - echo $CI_COMMIT_TAG 
+    - echo $PROD_ENV
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
