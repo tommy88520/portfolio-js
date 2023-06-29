@@ -1,5 +1,5 @@
 variables:
-  SA_PASSWORD_YAML_FILE: $DOCKER_SECRET
+  SA_PASSWORD_YAML_FILE: $TEST
 stages:
   - build_container
 
@@ -13,5 +13,8 @@ release_build:
   extends: .build
   script:
     - echo "1234 ${SA_PASSWORD_YAML_FILE}"
+    - touch .env
+    - cat $TEST
+    - cat $TEST >> .env
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
