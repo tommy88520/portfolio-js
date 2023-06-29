@@ -15,6 +15,6 @@ release_build:
     - echo "1234 ${SA_PASSWORD_YAML_FILE}"
     - touch .env
     - cat $TEST
-    - echo $MERGE_REQUEST_SOURCE
+    - echo $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
