@@ -12,6 +12,6 @@ stages:
 release_build:
   extends: .build
   script:
-    - echo "123 ${SA_PASSWORD_YAML_FILE}"
+    - echo "1234 ${SA_PASSWORD_YAML_FILE}"
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
