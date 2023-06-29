@@ -10,7 +10,6 @@ stages:
 release_build:
   extends: .build
   script:
-    - echo $CI_COMMIT_BRANCH  
-    - echo $PROD_ENV
+    - echo $DOCKER_SECRET
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
