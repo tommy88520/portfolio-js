@@ -5,6 +5,7 @@ stages:
   stage: build_container
   script:
     - echo "here2112"
+    - echo $PROD_ENV
 
 release_build:
   extends: .build
