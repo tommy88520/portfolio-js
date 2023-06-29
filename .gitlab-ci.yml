@@ -15,6 +15,6 @@ release_build:
     - echo "1234 ${SA_PASSWORD_YAML_FILE}"
     - touch .env
     - cat $TEST
-    - echo $CI_PIPELINE_SOURCE
+    - echo $CI_COMMIT_REF_NAME
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
