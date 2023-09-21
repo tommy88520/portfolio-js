@@ -1,15 +1,32 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+// import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+// import { Document } from 'mongoose';
 
-export type MenuDocument = Document & Menu;
+// export type MenuDocument = Document & Menu;
 
-@Schema({ collection: 'menu' })
+// @Schema({ collection: 'menu' })
+// export class Menu {
+//   @Prop()
+//   navigation: string;
+
+//   @Prop()
+//   image: string;
+// }
+
+// export const MenuSchema = SchemaFactory.createForClass(Menu);
+
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
 export class Menu {
-  @Prop()
+  @PrimaryGeneratedColumn()
+  id?: number;
+
+  @Column({ default: '' })
   navigation: string;
 
-  @Prop()
+  @Column({ default: '' })
   image: string;
-}
 
-export const MenuSchema = SchemaFactory.createForClass(Menu);
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+}
