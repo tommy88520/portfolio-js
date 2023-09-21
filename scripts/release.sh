@@ -14,4 +14,4 @@ IMAGE_TAG=asia-east1-docker.pkg.dev/portfolio-js-123/portfolio/backend-prod:$COM
 docker build --platform linux/amd64 -t $IMAGE_TAG --build-arg ENV=prod .
 docker push $IMAGE_TAG
 docker rmi $IMAGE_TAG
-git push upstream test2 --tags && git push origin test2
+git push upstream master --tags && git push origin master
