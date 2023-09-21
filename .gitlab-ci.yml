@@ -16,6 +16,7 @@ stages:
   image: google/cloud-sdk:latest
   before_script:
     - PREVIOUS_COMMIT=$(git log -1 --pretty=%H)
+    - cat $GCP_KEY >> ./config/key/portfolio-js-123-08cc5e335d93.json
     - gcloud --version
     - gcloud auth activate-service-account --key-file ./config/key/portfolio-js-123-08cc5e335d93.json
     - gcloud config set project $PROJECT_ID
@@ -35,7 +36,7 @@ stages:
       --boot-disk-size=10
       --boot-disk-type=pd-balanced
       --boot-disk-device-name=${TEMPLATE_NAME}
-      --network-interface=subnet=${NIC0_SUBNET}
+      --network-interface=subnet=${NIC0_SUBNET},no-address
       --service-account=${SERVICE_ACCOUNT}
       --tags=health-check,iap-tunnel-ssh,${PROJECT_NAME},http-server,https-server
       --container-image=${DOCKER_REGISTRY_URL}/${IMAGE_ENDPOINT}:${PREVIOUS_COMMIT}
@@ -82,7 +83,7 @@ stages:
 prod_create:
   extends: .create
   rules:
-    - if: $CI_COMMIT_BRANCH == 'master' && $CI_PROJECT_PATH == 'tommy88520/tommy-portfolio'
+    - if: $CI_COMMIT_BRANCH == 'test2' && $CI_PROJECT_PATH == 'tommy88520/tommy-portfolio'
   variables:
     IMAGE_ENDPOINT: ${PROD_IMAGE_ENDPOINT}
     TEMPLATE_NAME: portfolio-backend-prod-template-${CI_COMMIT_SHORT_SHA}
@@ -91,7 +92,7 @@ prod_create:
 prod_deploy:
   extends: .deploy
   rules:
-    - if: $CI_COMMIT_BRANCH == 'master' && $CI_PROJECT_PATH == 'tommy88520/tommy-portfolio'
+    - if: $CI_COMMIT_BRANCH == 'test2' && $CI_PROJECT_PATH == 'tommy88520/tommy-portfolio'
   variables:
     IMAGE_ENDPOINT: ${PROD_IMAGE_ENDPOINT}
     DOCKER_TAG: prod
@@ -101,7 +102,7 @@ prod_deploy:
 prod_clean:
   extends: .clean
   rules:
-    - if: $CI_COMMIT_BRANCH == 'master' && $CI_PROJECT_PATH == 'tommy88520/tommy-portfolio'
+    - if: $CI_COMMIT_BRANCH == 'test2' && $CI_PROJECT_PATH == 'tommy88520/tommy-portfolio'
   variables:
     IMAGE_ENDPOINT: ${PROD_IMAGE_ENDPOINT}
     BASE_TEMPLATE: portfolio-backend-prod-template
