@@ -1,20 +1,8 @@
-variables:
-  SA_PASSWORD_YAML_FILE: $TEST
+
 stages:
-  - build_container
+  - gotest
 
-.build:
-  stage: build_container
-  script:
-    - echo "here2112"
-    
-
-release_build:
-  extends: .build
-  script:
-    - echo "1234 ${SA_PASSWORD_YAML_FILE}"
-    - touch .env
-    - cat $TEST
-    - echo $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
-  rules:
-    - if: $CI_COMMIT_BRANCH == "master"
+gotest:
+  stage: gotest
+  script: 
+    - echo $CI_PIPELINE_SOURCE

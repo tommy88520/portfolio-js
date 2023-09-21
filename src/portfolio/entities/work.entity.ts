@@ -1,24 +1,36 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
+import { Tag } from './tag.entity';
 
-export type WorkDocument = Document & Work;
-
-@Schema({ collection: 'work', timestamps: true })
+@Entity()
 export class Work {
-  @Prop()
+  @PrimaryGeneratedColumn()
+  id?: number;
+
+  @Column({ default: '' })
   title: string;
 
-  @Prop()
+  @Column({ default: '' })
   content: string;
 
-  @Prop()
-  tag: string[];
+  @OneToMany(() => Tag, (tag) => tag.work)
+  @JoinColumn()
+  public tags: Tag[];
 
-  @Prop()
-  createdAt?: Date;
+  @Column({ default: 'en' })
+  lang: string;
 
-  @Prop()
-  updatedAt?: Date;
+  @Column({ default: 1 })
+  orderNumber: number;
+
+  @Column({ default: '' })
+  workImage: string;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }
-
-export const WorkSchema = SchemaFactory.createForClass(Work);
