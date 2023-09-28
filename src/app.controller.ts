@@ -6,7 +6,9 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  async getNumber(): Promise<any> {
+    return {
+      FromRandomNumDbs: `this is loaded from version v${process.env.npm_package_version}`,
+    };
   }
 }

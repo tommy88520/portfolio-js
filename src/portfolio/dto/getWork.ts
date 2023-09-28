@@ -3,6 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class GetWorkDto {
   @IsString()
-  @ApiProperty({ description: 'lang' })
+  @ApiProperty({ default: 'en', description: 'lang' })
   lang: string;
 }

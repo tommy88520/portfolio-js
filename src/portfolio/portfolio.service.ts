@@ -6,6 +6,9 @@ import { Menu } from './entities/menu.entity';
 import { Work } from './entities/work.entity';
 import { Skills } from './entities/skills.entity';
 import { Tag } from './entities/tag.entity';
+import { WorkPage } from './entities/work-page.entity';
+import { WorkDetail } from './entities/work-detail.entity';
+import { WorkDetailImage } from './entities/work-detail-image.entity';
 import { NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -23,6 +26,12 @@ export class PortfolioService {
     private readonly skillsModel: Repository<Skills>,
     @InjectRepository(Tag)
     private readonly tagModel: Repository<Tag>,
+    @InjectRepository(WorkPage)
+    private readonly workPageModel: Repository<WorkPage>,
+    @InjectRepository(WorkDetail)
+    private readonly workDetailModel: Repository<WorkDetail>,
+    @InjectRepository(WorkDetailImage)
+    private readonly workDetailImageModel: Repository<WorkDetailImage>,
   ) {}
   async create(createMenuDto: CreateMenuDto): Promise<Menu> {
     const result = await this.menuModel.save(createMenuDto);
@@ -52,7 +61,7 @@ export class PortfolioService {
 
   // // --work--
 
-  async createWork(createWorkDto: CreateWorkDto): Promise<any> {
+  async createWork(createWorkDto: CreateWorkDto): Promise<Work> {
     const { title, content, tag, lang, orderNumber, workImage } = createWorkDto;
     const work = this.workModel.create({
       title,
@@ -68,9 +77,10 @@ export class PortfolioService {
       await this.tagModel.save(task);
       newTags.push(task);
     }
+
     work.tags = newTags;
-    await this.workModel.save(work);
-    return 'great';
+
+    return await this.workModel.save(work);
   }
 
   async getAllWork(getWorkDto): Promise<Work[]> {
@@ -140,5 +150,55 @@ export class PortfolioService {
     if (!result) throw new NotFoundException(`Entity with id ${id} not found`);
 
     return result;
+  }
+
+  // work-page
+
+  async createWorkPage(createWorkPageDto): Promise<any> {
+    const { workId, title, workDetail } = createWorkPageDto;
+    const workTest = this.workModel.create({ id: workId });
+    const workPage = this.workPageModel.create({
+      work: workTest,
+      title,
+    });
+    const newWorkDetail = [];
+    for (const detailData of workDetail) {
+      const workDetailItems = this.workDetailModel.create({
+        title: detailData.title,
+        content: detailData.content,
+      });
+      const newImage = [];
+      for (const workImage of detailData.workDetailImages) {
+        const image = this.workDetailImageModel.create({ image: workImage });
+        await this.workDetailImageModel.save(image);
+        newImage.push(image);
+      }
+      workDetailItems.workDetailImages = newImage;
+      await this.workDetailModel.save(workDetailItems);
+
+      newWorkDetail.push(workDetailItems);
+    }
+    workPage.workDetail = newWorkDetail;
+
+    return await this.workPageModel.save(workPage);
+  }
+
+  async getWorkPage() {
+    // const results = await this.workPageModel
+    //   .createQueryBuilder('workPage')
+    //   .leftJoinAndSelect('workPage.workDetail', 'workDetail')
+    //   .leftJoinAndSelect('workDetail.workDetailImages', 'workDetailImages')
+    //   // .select(['work.id', 'work.title', 'workPage'])
+    //   .where({ id: 10 })
+    //   .orderBy('workPage.createdAt', 'DESC')
+    //   .getMany();
+    //上下兩種寫法都可以
+
+    const results = await this.workPageModel.findOne({
+      relations: ['workDetail', 'workDetail.workDetailImages'],
+      order: { createdAt: 'DESC' },
+      where: { id: 10 },
+    });
+    return results;
   }
 }

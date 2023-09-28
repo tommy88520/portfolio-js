@@ -8,20 +8,25 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  UseInterceptors,
+  UploadedFiles,
   BadRequestException,
 } from '@nestjs/common';
 import { PortfolioService } from './portfolio.service';
 import { CreateMenuDto } from './dto/menu.dto';
 import { CreateWorkDto } from './dto/work.dto';
+import { CreateWorkPageDto } from './dto/workPage.dto';
 import { SkillsDto } from './dto/skills.dto';
 import { GetWorkDto } from './dto/getWork';
 import { Types } from 'mongoose';
-import { ApiBody, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiConsumes } from '@nestjs/swagger';
 import { Skills } from './entities/skills.entity';
 import { Menu } from './entities/menu.entity';
 import { Work } from './entities/work.entity';
 import { UpdateResult, DeleteResult } from 'typeorm';
 import { Observable } from 'rxjs';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import uploadImg from '~/common/upload-img';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -120,5 +125,47 @@ export class PortfolioController {
     @Param('id') id: string,
   ): Promise<Observable<DeleteResult>> {
     return this.portfolioService.removeSkills(id);
+  }
+
+  @Post('create-work-page')
+  @UsePipes(new ValidationPipe())
+  @ApiOperation({ description: 'create work page' })
+  @ApiBody({ type: CreateWorkPageDto })
+  async createWorkPage(
+    @Body() createWorkPageDto: CreateWorkPageDto,
+  ): Promise<any> {
+    return this.portfolioService.createWorkPage(createWorkPageDto);
+  }
+
+  @Post('get-work-page')
+  @UsePipes(new ValidationPipe())
+  @ApiOperation({ description: 'get all work page' })
+  async getAllWorkPage(@Body() getWorkDto: GetWorkDto): Promise<any> {
+    return await this.portfolioService.getWorkPage();
+  }
+
+  @Post('upload-img')
+  @UsePipes(new ValidationPipe())
+  @ApiOperation({ description: 'uploadImg' })
+  @UseInterceptors(FilesInterceptor('files'))
+  @ApiConsumes('multipart/form-data') // 指定支持的媒体类型为 'multipart/form-data'
+  @ApiBody({
+    type: 'multipart/form-data',
+    required: true,
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array', // 将属性类型指定为数组
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+    },
+  })
+  async uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
+    return await uploadImg(files);
   }
 }
