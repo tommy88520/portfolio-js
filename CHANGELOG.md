@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/tommy88520/portfolio-js/compare/v1.2.0...v1.3.0) (2023-09-28)
+
+
+### Features
+
+* add docker file and ci/cd and release script ([93f84a1](https://github.com/tommy88520/portfolio-js/commit/93f84a1c7fd830b6ae116ca51d5b311b3b1150e7))
+* add work page(not done yet) and upload image to imgur api ([30093dc](https://github.com/tommy88520/portfolio-js/commit/30093dc8154cff43aa9ed757889b732efc8c802d))
+
+
+### Bug Fixes
+
+* fix cicd file ([600caac](https://github.com/tommy88520/portfolio-js/commit/600caacd005a608e5a6a6e6a16a82d36dc7169ca))
+* fix release script ([5cb7dff](https://github.com/tommy88520/portfolio-js/commit/5cb7dff675b58e0cd366100612a4d436fcab5e30))
+* hide service account ([56a3dd0](https://github.com/tommy88520/portfolio-js/commit/56a3dd0f77083d7fa88a9966a7ba92c46a824ce1))
+
+
+### Chore
+
+* menu crud done ([c33277f](https://github.com/tommy88520/portfolio-js/commit/c33277fb609a5520aa2f1e0ba34c41c46e4fa26c))
+* work done ([8f1dbd5](https://github.com/tommy88520/portfolio-js/commit/8f1dbd579ce3f130febfa556007157ec4c49d08b))
+
 ## [1.2.0](https://github.com/tommy88520/portfolio-js/compare/v1.1.0...v1.2.0) (2023-06-16)
 
 
