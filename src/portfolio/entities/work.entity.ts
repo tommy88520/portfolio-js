@@ -6,6 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Tag } from './tag.entity';
+import { WorkPage } from './work-page.entity';
 
 @Entity()
 export class Work {
@@ -21,6 +22,10 @@ export class Work {
   @OneToMany(() => Tag, (tag) => tag.work)
   @JoinColumn()
   public tags: Tag[];
+
+  @OneToMany(() => WorkPage, (tag) => tag.work)
+  @JoinColumn()
+  public workPage: WorkPage[];
 
   @Column({ default: 'en' })
   lang: string;
