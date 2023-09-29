@@ -27,6 +27,12 @@ export class WorkPage {
   })
   public work: Work;
 
+  @Column({ default: '' })
+  articleId: string;
+
+  @Column({ default: '' })
+  lang: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 }

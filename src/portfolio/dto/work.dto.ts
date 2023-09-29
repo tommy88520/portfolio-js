@@ -28,4 +28,8 @@ export class CreateWorkDto {
   @IsString()
   @ApiProperty({ default: 'en', description: 'image' })
   workImage: string;
+
+  @IsString()
+  @ApiProperty({ default: '', description: 'articleId' })
+  articleId: string;
 }

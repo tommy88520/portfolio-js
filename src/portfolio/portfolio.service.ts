@@ -62,13 +62,15 @@ export class PortfolioService {
   // // --work--
 
   async createWork(createWorkDto: CreateWorkDto): Promise<Work> {
-    const { title, content, tag, lang, orderNumber, workImage } = createWorkDto;
+    const { title, content, tag, lang, orderNumber, workImage, articleId } =
+      createWorkDto;
     const work = this.workModel.create({
       title,
       content,
       lang,
       orderNumber,
       workImage,
+      articleId,
     });
     const newTags = [];
 
@@ -155,11 +157,12 @@ export class PortfolioService {
   // work-page
 
   async createWorkPage(createWorkPageDto): Promise<any> {
-    const { workId, title, workDetail } = createWorkPageDto;
-    const workTest = this.workModel.create({ id: workId });
+    const { articleId, title, workDetail, lang } = createWorkPageDto;
+    // const workModule = this.workModel.create({ articleId });
     const workPage = this.workPageModel.create({
-      work: workTest,
+      articleId,
       title,
+      lang,
     });
     const newWorkDetail = [];
     for (const detailData of workDetail) {
@@ -183,22 +186,24 @@ export class PortfolioService {
     return await this.workPageModel.save(workPage);
   }
 
-  async getWorkPage() {
-    // const results = await this.workPageModel
-    //   .createQueryBuilder('workPage')
-    //   .leftJoinAndSelect('workPage.workDetail', 'workDetail')
-    //   .leftJoinAndSelect('workDetail.workDetailImages', 'workDetailImages')
-    //   // .select(['work.id', 'work.title', 'workPage'])
-    //   .where({ id: 10 })
-    //   .orderBy('workPage.createdAt', 'DESC')
-    //   .getMany();
-    //上下兩種寫法都可以
+  async getWorkPage(articleId, lang) {
+    const results = await this.workPageModel
+      .createQueryBuilder('workPage')
+      .leftJoinAndSelect('workPage.workDetail', 'workDetail')
+      .leftJoinAndSelect('workDetail.workDetailImages', 'workDetailImages')
+      .where('workPage.articleId = :articleId', { articleId })
+      .andWhere('workPage.lang = :lang', { lang }) // 添加 lang 条件
+      .orderBy('workDetail.createdAt', 'ASC')
+      .getOne();
 
-    const results = await this.workPageModel.findOne({
-      relations: ['workDetail', 'workDetail.workDetailImages'],
-      order: { createdAt: 'DESC' },
-      where: { id: 10 },
-    });
+    // 上下兩種寫法都可以，
+    // const results2 = await this.workPageModel.findOne({
+    //   relations: ['workDetail', 'workDetail.workDetailImages'],
+    //   order: { createdAt: 'DESC' },
+    //   where: { articleId, lang }, // 这里使用了嵌套的 where 条件
+    // });
+    console.log(results);
+
     return results;
   }
 }

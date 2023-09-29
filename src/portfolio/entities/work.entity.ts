@@ -36,6 +36,9 @@ export class Work {
   @Column({ default: '' })
   workImage: string;
 
+  @Column({ default: '' })
+  articleId: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 }
