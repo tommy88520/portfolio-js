@@ -23,9 +23,9 @@ export class Work {
   @JoinColumn()
   public tags: Tag[];
 
-  @OneToMany(() => WorkPage, (tag) => tag.work)
-  @JoinColumn()
-  public workPage: WorkPage[];
+  // @OneToMany(() => WorkPage, (tag) => tag.work)
+  // @JoinColumn()
+  // public workPage: WorkPage[];
 
   @Column({ default: 'en' })
   lang: string;

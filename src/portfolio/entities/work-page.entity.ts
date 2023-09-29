@@ -21,11 +21,11 @@ export class WorkPage {
   @JoinColumn()
   public workDetail: WorkDetail[];
 
-  @ManyToOne(() => Work, (e) => e.workPage, {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  public work: Work;
+  // @ManyToOne(() => Work, (e) => e.workPage, {
+  //   cascade: true,
+  //   onDelete: 'CASCADE',
+  // })
+  // public work: Work;
 
   @Column({ default: '' })
   articleId: string;
