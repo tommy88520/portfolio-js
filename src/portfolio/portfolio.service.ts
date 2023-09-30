@@ -194,6 +194,7 @@ export class PortfolioService {
       .where('workPage.articleId = :articleId', { articleId })
       .andWhere('workPage.lang = :lang', { lang }) // 添加 lang 条件
       .orderBy('workDetail.createdAt', 'ASC')
+      .addOrderBy('workDetailImages.createdAt', 'ASC')
       .getOne();
 
     // 上下兩種寫法都可以，
