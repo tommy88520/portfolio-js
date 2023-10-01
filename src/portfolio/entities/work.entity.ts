@@ -6,7 +6,6 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Tag } from './tag.entity';
-import { WorkPage } from './work-page.entity';
 
 @Entity()
 export class Work {
@@ -23,10 +22,6 @@ export class Work {
   @JoinColumn()
   public tags: Tag[];
 
-  @OneToMany(() => WorkPage, (tag) => tag.work)
-  @JoinColumn()
-  public workPage: WorkPage[];
-
   @Column({ default: 'en' })
   lang: string;
 
@@ -35,6 +30,9 @@ export class Work {
 
   @Column({ default: '' })
   workImage: string;
+
+  @Column({ default: '' })
+  articleId: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

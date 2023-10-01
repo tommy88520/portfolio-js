@@ -28,12 +28,16 @@ export class WorkDetailDto {
 
 export class CreateWorkPageDto {
   @IsNumber()
-  @ApiProperty({ description: 'workId', default: 1 })
-  workId: number;
+  @ApiProperty({ description: 'articleId', default: 1 })
+  articleId: number;
 
   @IsString()
   @ApiProperty({ description: 'Title' })
   title: string;
+
+  @IsString()
+  @ApiProperty({ description: 'en' })
+  lang: string;
 
   @ValidateNested()
   @IsNotEmpty()

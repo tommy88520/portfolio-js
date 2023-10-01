@@ -18,6 +18,7 @@ import { CreateWorkDto } from './dto/work.dto';
 import { CreateWorkPageDto } from './dto/workPage.dto';
 import { SkillsDto } from './dto/skills.dto';
 import { GetWorkDto } from './dto/getWork';
+import { GetWorkPageDto } from './dto/getWorkPage';
 import { Types } from 'mongoose';
 import { ApiBody, ApiOperation, ApiParam, ApiConsumes } from '@nestjs/swagger';
 import { Skills } from './entities/skills.entity';
@@ -26,7 +27,7 @@ import { Work } from './entities/work.entity';
 import { UpdateResult, DeleteResult } from 'typeorm';
 import { Observable } from 'rxjs';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import uploadImg from '~/common/upload-img';
+import uploadImg2 from '~/common/upload-img';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -140,8 +141,10 @@ export class PortfolioController {
   @Post('get-work-page')
   @UsePipes(new ValidationPipe())
   @ApiOperation({ description: 'get all work page' })
-  async getAllWorkPage(@Body() getWorkDto: GetWorkDto): Promise<any> {
-    return await this.portfolioService.getWorkPage();
+  @ApiBody({ type: GetWorkPageDto })
+  async getAllWorkPage(@Body() getWorkPageDto: GetWorkPageDto): Promise<any> {
+    const { articleId, lang } = getWorkPageDto;
+    return await this.portfolioService.getWorkPage(articleId, lang);
   }
 
   @Post('upload-img')
@@ -166,6 +169,6 @@ export class PortfolioController {
     },
   })
   async uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
-    return await uploadImg(files);
+    return await uploadImg2(files);
   }
 }
