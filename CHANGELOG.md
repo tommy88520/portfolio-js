@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/tommy88520/portfolio-js/compare/v1.3.1...v1.4.0) (2023-10-01)
+
+
+### Features
+
+* add work and work page relation ([8dad848](https://github.com/tommy88520/portfolio-js/commit/8dad848626b081ac6bad84f8fd8180dd43b4464f))
+
+
+### Bug Fixes
+
+* fix fk setting ([20cf70f](https://github.com/tommy88520/portfolio-js/commit/20cf70fd5dad6295902f07ff3cb8fc68b05fa44f))
+* fix imgbb upload img ([fe095a8](https://github.com/tommy88520/portfolio-js/commit/fe095a884d09e7d7d1a46df7026481920a81df06))
+
+
+### Chore
+
+* handle img sharp and add ibb to webp ([d8a0c79](https://github.com/tommy88520/portfolio-js/commit/d8a0c79fd60b2120a52cbfd760b2bf4a4532ab08))
+
 ### [1.3.1](https://github.com/tommy88520/portfolio-js/compare/v1.3.0...v1.3.1) (2023-09-28)
 
 ## [1.3.0](https://github.com/tommy88520/portfolio-js/compare/v1.2.0...v1.3.0) (2023-09-28)
