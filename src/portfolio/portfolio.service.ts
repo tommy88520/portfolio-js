@@ -9,7 +9,7 @@ import { Tag } from './entities/tag.entity';
 import { WorkPage } from './entities/work-page.entity';
 import { WorkDetail } from './entities/work-detail.entity';
 import { WorkDetailImage } from './entities/work-detail-image.entity';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, BadRequestError } from '~/common/httpError';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository, UpdateResult, DeleteResult } from 'typeorm';
@@ -95,6 +95,7 @@ export class PortfolioService {
     result.forEach((work) => {
       work.tags.sort((a, b) => a.id - b.id);
     });
+    if (!result) throw new NotFoundException(`No Data not found`);
 
     return result;
   }
@@ -204,6 +205,7 @@ export class PortfolioService {
     //   where: { articleId, lang }, // 这里使用了嵌套的 where 条件
     // });
     console.log(results);
+    if (!results) throw new NotFoundException(`No Data not found`);
 
     return results;
   }

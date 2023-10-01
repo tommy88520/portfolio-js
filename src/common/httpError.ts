@@ -26,7 +26,7 @@ export class UnauthorizedException extends HttpException {
 }
 
 export class BadRequestError extends HttpException {
-  constructor(error) {
+  constructor(error = 'Bad request') {
     super(
       {
         status: HttpStatus.BAD_REQUEST,
@@ -55,5 +55,11 @@ export class PayloadTooLargeException extends HttpException {
       { errorCode: ErrorCode.PAYLOAD_TOO_LARGE, message },
       HttpStatus.PAYLOAD_TOO_LARGE,
     );
+  }
+}
+
+export class NotFoundException extends HttpException {
+  constructor(message = 'not found') {
+    super({ errorCode: ErrorCode.NOT_FOUND, message }, HttpStatus.NOT_FOUND);
   }
 }

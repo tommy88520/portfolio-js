@@ -4,9 +4,7 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   JoinColumn,
-  ManyToOne,
 } from 'typeorm';
-import { Work } from './work.entity';
 import { WorkDetail } from './work-detail.entity';
 
 @Entity()
@@ -20,12 +18,6 @@ export class WorkPage {
   @OneToMany(() => WorkDetail, (e) => e.workPage)
   @JoinColumn()
   public workDetail: WorkDetail[];
-
-  // @ManyToOne(() => Work, (e) => e.workPage, {
-  //   cascade: true,
-  //   onDelete: 'CASCADE',
-  // })
-  // public work: Work;
 
   @Column({ default: '' })
   articleId: string;

@@ -27,7 +27,7 @@ import { Work } from './entities/work.entity';
 import { UpdateResult, DeleteResult } from 'typeorm';
 import { Observable } from 'rxjs';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import uploadImg from '~/common/upload-img';
+import uploadImg2 from '~/common/upload-img';
 
 @Controller('portfolio')
 export class PortfolioController {
@@ -169,6 +169,6 @@ export class PortfolioController {
     },
   })
   async uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
-    return await uploadImg(files);
+    return await uploadImg2(files);
   }
 }
